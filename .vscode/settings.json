@@ -1,0 +1,27 @@
+{
+    "C_Cpp.default.compilerPath": "cl.exe",
+    "C_Cpp.errorSquiggles": "disabled",
+    "files.associations": {
+        "initializer_list": "cpp",
+        "utility": "cpp",
+        "xutility": "cpp",
+        "algorithm": "cpp",
+        "optional": "cpp",
+        "type_traits": "cpp",
+        "xtr1common": "cpp",
+        "compare": "cpp",
+        "concepts": "cpp",
+        "cstddef": "cpp",
+        "cstdint": "cpp",
+        "cstdio": "cpp",
+        "cstdlib": "cpp",
+        "cstring": "cpp",
+        "cwchar": "cpp",
+        "exception": "cpp",
+        "limits": "cpp",
+        "new": "cpp",
+        "tuple": "cpp",
+        "xmemory": "cpp",
+        "atomic": "cpp"
+    }
+}

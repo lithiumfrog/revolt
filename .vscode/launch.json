@@ -1,0 +1,35 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "(Windows) editor",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/windows_x86-64/editor.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}/bin/windows_x86-64/",
+            "console": "externalTerminal"
+        },
+        {
+            "name": "(Windows) unit_testing",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/windows_x86-64/unit_testing.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}/bin/windows_x86-64/",
+            "console": "externalTerminal"
+        },
+        {
+            "name": "(Linux) editor",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/linux_x86-64/editor",
+            "args": [],
+            "cwd": "${workspaceFolder}/bin/linux_x86-64/",
+            "terminal": "integrated",
+            "env": {
+                "LD_LIBRARY_PATH": "${workspaceFolder}/bin/linux_x86-64"
+            }
+        },
+    ]
+}

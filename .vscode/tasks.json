@@ -1,0 +1,38 @@
+{
+    "windows": {
+        "options": {
+            "shell": {
+                "executable": "cmd.exe",
+                "args": [
+                    "/d", "/c"
+                ]
+            }
+        }
+    },
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "Build Everything",
+            "windows": {
+                "command": "${workspaceFolder}\\scripts\\windows_x86-64\\build-all.bat",
+                "options": {
+                    "cwd": "${workspaceFolder}\\scripts\\windows_x86-64"
+                }
+            },
+            "linux": {
+                "command": "${workspaceFolder}/scripts/linux_x86-64/build-all.sh",
+                "options": {
+                    "cwd": "${workspaceFolder}/scripts/linux_x86-64"
+                }
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ],
+    "version": "2.0.0"
+}
