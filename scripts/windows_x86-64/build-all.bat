@@ -10,6 +10,8 @@ call build-standard.bat
 echo.
 call build-editor.bat
 echo.
+call build-ut.bat
+echo.
 echo --------------------------- BUILD COMPLETE ---------------------------
 echo.
 goto :eof

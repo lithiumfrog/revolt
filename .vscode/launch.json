@@ -11,10 +11,10 @@
             "console": "externalTerminal"
         },
         {
-            "name": "(Windows) unit_testing",
+            "name": "(Windows) unit testing",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/bin/windows_x86-64/unit_testing.exe",
+            "program": "${workspaceFolder}/bin/windows_x86-64/ut.exe",
             "args": [],
             "cwd": "${workspaceFolder}/bin/windows_x86-64/",
             "console": "externalTerminal"
@@ -32,7 +32,7 @@
             }
         },
         {
-            "name": "(Linux) unit_testing",
+            "name": "(Linux) unit testing",
             "type": "lldb",
             "request": "launch",
             "program": "${workspaceFolder}/bin/linux_x86-64/ut",
