@@ -84,9 +84,9 @@ STANDARD_RESULT os_memory_allocate(u64 size, u64 debug_base_address_in_TiB, void
 
 #if STANDARD_DEBUG_BASE_ADDRESS_FOR_ALLOCATIONS == 1
     LPVOID base_address = (LPVOID)TiB(debug_base_address_in_TiB);
-#else
+#else // STANDARD_DEBUG_BASE_ADDRESS_FOR_ALLOCATIONS == 1
     LPVOID base_address = NULL;
-#endif
+#endif // STANDARD_DEBUG_BASE_ADDRESS_FOR_ALLOCATIONS == 1
 
     // allocate
     *out_allocation = VirtualAlloc(base_address, aligned_size, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
@@ -101,9 +101,12 @@ STANDARD_RESULT os_memory_allocate(u64 size, u64 debug_base_address_in_TiB, void
     return STANDARD_RESULT_SUCCESS;
 }
 
-void os_memory_free(void* block)
+void os_memory_free(void* block, u64 length)
 {
-    VirtualFree(block, 0, MEM_RELEASE);
+    (void)length;
+    if (block != NULL) {
+        VirtualFree(block, 0, MEM_RELEASE);
+    }
 }
 
 

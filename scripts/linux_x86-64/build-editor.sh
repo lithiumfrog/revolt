@@ -23,10 +23,12 @@ COMPILER_FLAGS="\
                 "
 LINKER_FLAGS="\
               -lpthread \
-              -ldl \
-              -lX11 \
+              -lGL \
+    -lxcb -lxcb-util -lxcb-icccm -lxcb-keysyms \
+    -lX11 -L/usr/X11R6/lib \
               -l:standard.a -Lbin/linux_x86-64 \
               "
+# -lX11-xcb -lxkbcommon
 
 # compile
 echo "-- editor --"

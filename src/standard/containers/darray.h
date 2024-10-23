@@ -17,7 +17,7 @@ void _darray_destroy(void* array, const char* file, int line);
 template<typename T>
 void darray_destroy(T*& array) {
     _darray_destroy(array, __FILE__, __LINE__);
-    array = NULL;
+    array = nullptr;
 }
 
 // grow

@@ -54,6 +54,7 @@ static s32 test = 0;
     s64 FRAME_CYCLES_LastCycleCount = os_rdtsc();
     s64 FRAME_CYCLES_EndCycleCount = 0;
     u64 FRAME_CYCLES_CyclesElapsed = 0u;
+    LOG_TRACE("UNUSED PARAM editor_run\n", FRAME_CYCLES_CyclesElapsed);
 
     while(platform_state->is_running)
     {
@@ -65,6 +66,7 @@ static s32 test = 0;
 
         accumulator += delta_time;
         f64 alpha_time = accumulator / UPDATE_DELTA;
+        (void)alpha_time; // UNUSED VARIABLE
         while (accumulator >= UPDATE_DELTA)
         {
             // update();

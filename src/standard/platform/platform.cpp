@@ -10,22 +10,22 @@
     static u64 memory_debug_address_current = 3u; // starting debug address in TiB
 #endif
 
-platform_state_st platform_state;
+platform_state_st g_platform_state;
 
 
 STANDARD_RESULT platform_init(platform_state_st** out_platform_state)
 {
     STANDARD_RESULT res;
 
-    res = memory_pool_create("platform pool", MiB(10), &platform_state.platform_pool);
-    os_init(&platform_state);
+    res = memory_pool_create("platform pool", MiB(10), &g_platform_state.platform_pool);
+    os_init(&g_platform_state);
     if (res) { return res; }
     res = platform_windowing_init();
     if (res) { return res; }
     os_gl_init();
 
-    platform_state.is_running = true;
-    *out_platform_state = &platform_state;
+    g_platform_state.is_running = true;
+    *out_platform_state = &g_platform_state;
     return STANDARD_RESULT_SUCCESS;
 }
 
@@ -73,13 +73,13 @@ STANDARD_RESULT memory_pool_create(const char* name, u64 size, memory_pool_st** 
     (*out_memory_pool)->free_zero_list = initial_free_chunk_header;
 
     // add to memory pools list
-    if (platform_state.memory_pool_list_head == NULL) // first pool
+    if (g_platform_state.memory_pool_list_head == NULL) // first pool
     {
-        platform_state.memory_pool_list_head = *out_memory_pool;
+        g_platform_state.memory_pool_list_head = *out_memory_pool;
     }
     else // not first pool
     {
-        memory_pool_st* current = platform_state.memory_pool_list_head;
+        memory_pool_st* current = g_platform_state.memory_pool_list_head;
         while (current->next != NULL)
         {
             current = current->next;
@@ -94,15 +94,16 @@ STANDARD_RESULT memory_pool_create(const char* name, u64 size, memory_pool_st** 
 void memory_pool_destroy(memory_pool_st* memory_pool)
 {
     STANDARD_ASSERT_MSG(memory_pool, "memory_pool_destroy() attempting to destroy invalid memory pool!");
-    STANDARD_ASSERT_MSG(platform_state.memory_pool_list_head, "memory_pool_destroy() memory pools list empty!");
-    memory_pool_st* current = platform_state.memory_pool_list_head;
+    STANDARD_ASSERT_MSG(g_platform_state.memory_pool_list_head, "memory_pool_destroy() memory pools list empty!");
+    memory_pool_st* current = g_platform_state.memory_pool_list_head;
     while (current->next)
     {
         if (current->next == memory_pool)
         {
             if (memory_pool->next) { current->next = memory_pool->next; } // not end of list, remove from pools list
             else { current->next = NULL; } // end of list, remove from pools list
-            os_memory_free(memory_pool);
+            u64 length = current->payload_size + ALLOCATION_HEADER_SIZE_PLUS_PAD_BYTES;
+            os_memory_free(memory_pool, length);
             return;
         }
         current = current->next; // iterate
@@ -112,8 +113,8 @@ void memory_pool_destroy(memory_pool_st* memory_pool)
 
 void pools_list_print(void)
 {
-    if (platform_state.memory_pool_list_head == NULL) { LOG_INFO("Memory pools list empty!\n"); return; }
-    memory_pool_st* current = platform_state.memory_pool_list_head;
+    if (g_platform_state.memory_pool_list_head == NULL) { LOG_INFO("Memory pools list empty!\n"); return; }
+    memory_pool_st* current = g_platform_state.memory_pool_list_head;
 
     LOG_INFO("=================== Pools List ===================\n");
     s32 index = 0;
@@ -260,11 +261,12 @@ void* pool_allocations_list_iterate(memory_pool_st* pool, memory_pool_allocation
 
 void* _pool_allocate(u64 size, memory_pool_st* memory_pool, memory_tag_e tag, b32 zero_on_allocation, const char* file, int line)
 {
+    LOG_TRACE("UNUSED PARAM _pool_allocate\n", file, line);
     LOG_WARN("TODO: Add file/line to _pool_allocate\n");
 
     // validate pool
-    if (platform_state.memory_pool_list_head == NULL) { return NULL; }; // no pools
-    memory_pool_st* pool_current = platform_state.memory_pool_list_head; // first pool
+    if (g_platform_state.memory_pool_list_head == NULL) { return NULL; }; // no pools
+    memory_pool_st* pool_current = g_platform_state.memory_pool_list_head; // first pool
     while (pool_current != NULL) // validate provided pool
     {
         if (pool_current == memory_pool) { break; } // found
@@ -306,12 +308,13 @@ void* _pool_allocate(u64 size, memory_pool_st* memory_pool, memory_tag_e tag, b3
 
 void _pool_free(void* block, const char* file, int line)
 {
+    LOG_TRACE("UNUSED PARAM _pool_free\n", file, line);
     LOG_WARN("TODO: Add zero and coalesce function to _pool_free\n");
 
-    STANDARD_ASSERT_MSG(platform_state.memory_pool_list_head, "_pool_free() cannot free memory when there are no pools.");
+    STANDARD_ASSERT_MSG(g_platform_state.memory_pool_list_head, "_pool_free() cannot free memory when there are no pools.");
 
     // find pool
-    memory_pool_st* pool_current = platform_state.memory_pool_list_head;
+    memory_pool_st* pool_current = g_platform_state.memory_pool_list_head;
     while (pool_current)
     {
         if (block > (u8*)pool_current && block < ((u8*)pool_current + pool_current->payload_size)) { break; }
@@ -364,7 +367,7 @@ void _pool_free(void* block, const char* file, int line)
 
 void pool_zero_allocation(void* block)
 {
-    STANDARD_ASSERT_MSG(platform_state.memory_pool_list_head, "_pool_free() cannot free memory when there are no pools.");
+    STANDARD_ASSERT_MSG(g_platform_state.memory_pool_list_head, "_pool_free() cannot free memory when there are no pools.");
 
     memory_pool_allocation_header_st* block_header = (memory_pool_allocation_header_st*)((u8*)block - ALLOCATION_HEADER_SIZE_PLUS_PAD_BYTES);
     memset(block, 0, block_header->payload_size);
@@ -438,7 +441,7 @@ void pool_free_not_zero_list_print(memory_pool_st* memory_pool)
 // windowing
 STANDARD_RESULT platform_windowing_init()
 {
-    platform_state.windows_darray = darray_create<platform_window_st*>(1, platform_state.platform_pool, MEMORY_TAG_WINDOWING);
+    g_platform_state.windows_darray = darray_create<platform_window_st*>(1, g_platform_state.platform_pool, MEMORY_TAG_WINDOWING);
 
     STANDARD_RESULT res = os_windowing_init();
     if (res) { return res; }
@@ -448,7 +451,7 @@ STANDARD_RESULT platform_windowing_init()
 
 STANDARD_RESULT platform_window_create(u64 width, u64 height, platform_window_st** out_window)
 {
-    platform_window_st* window = (platform_window_st*)pool_allocate(sizeof(platform_window_st), platform_state.platform_pool, MEMORY_TAG_WINDOWING, true);
+    platform_window_st* window = (platform_window_st*)pool_allocate(sizeof(platform_window_st), g_platform_state.platform_pool, MEMORY_TAG_WINDOWING, true);
     // os_window_st* os_window = (os_window_st*)pool_allocate(sizeof(os_window_st), platform_state.platform_pool, MEMORY_TAG_WINDOWING, true);
     window->title = "lostling window";
     window->current_width = width;
@@ -464,7 +467,7 @@ STANDARD_RESULT platform_window_create(u64 width, u64 height, platform_window_st
     // window->ui_context.ui_windows_darray = darray_create<ui_window_st*>(1, platform_state.platform_pool, MEMORY_TAG_WINDOWING);
     // window->ui_context.ui_windows_dictionary = dictionary_linear_create(platform_state.platform_pool, MEMORY_TAG_WINDOWING);
 
-    darray_push(platform_state.windows_darray, window);
+    darray_push(g_platform_state.windows_darray, window);
 
     *out_window = window;
     return STANDARD_RESULT_SUCCESS;
@@ -472,24 +475,24 @@ STANDARD_RESULT platform_window_create(u64 width, u64 height, platform_window_st
 
 void platform_window_destroy(platform_window_st* window)
 {
-    LOG_DEBUG("old window darray length: %llu\n", darray_length_get(platform_state.windows_darray));
-    darray_erase_any_matching(platform_state.windows_darray, window);
+    LOG_DEBUG("old window darray length: %llu\n", darray_length_get(g_platform_state.windows_darray));
+    darray_erase_any_matching(g_platform_state.windows_darray, window);
     os_window_destroy(window);
     pool_free(window->os_window);
     pool_free(window);
-    LOG_DEBUG("new window darray length: %llu\n", darray_length_get(platform_state.windows_darray));
+    LOG_DEBUG("new window darray length: %llu\n", darray_length_get(g_platform_state.windows_darray));
 }
 
 void platform_windowing_pre_render(void)
 {
-    if (darray_length_get(platform_state.windows_darray) == 0)
+    if (darray_length_get(g_platform_state.windows_darray) == 0)
     {
-        platform_state.is_running = false;
+        g_platform_state.is_running = false;
     }
 
-    for (u64 i = darray_length_get(platform_state.windows_darray); i-- > 0; )
+    for (u64 i = darray_length_get(g_platform_state.windows_darray); i-- > 0; )
     {
-        platform_window_st* window = platform_state.windows_darray[i];
+        platform_window_st* window = g_platform_state.windows_darray[i];
         if (window->is_closing)
         {
             platform_window_destroy(window);

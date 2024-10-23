@@ -27,8 +27,6 @@ COMPILER_FLAGS="\
                 "
 LINKER_FLAGS="\
               -lpthread \
-              -ldl \
-              -lX11 \
               "
 
 # compile
