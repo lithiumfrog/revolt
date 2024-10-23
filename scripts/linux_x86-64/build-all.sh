@@ -26,7 +26,6 @@ build_failed() {
 echo ""
 echo "------------------------------- STARTING BUILD --------------------------------"
 echo ""
-
 ./build-standard.sh || {
     echo "Build failed during standard library build."
     build_failed
@@ -35,6 +34,12 @@ echo ""
 echo ""
 ./build-editor.sh || {
     echo "Build failed during editor build."
+    build_failed
+}
+
+echo ""
+./build-ut.sh || {
+    echo "Build failed during ut build."
     build_failed
 }
 

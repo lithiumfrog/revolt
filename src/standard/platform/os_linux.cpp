@@ -121,6 +121,11 @@ void os_memory_free(void* block, u64 length)
     }
 }
 
+u64 os_page_size_get(void)
+{
+    return (s32)sysconf(_SC_PAGESIZE);
+}
+
 
 // os windowing
 struct os_thread_st {

@@ -31,5 +31,17 @@
                 "LD_LIBRARY_PATH": "${workspaceFolder}/bin/linux_x86-64"
             }
         },
+        {
+            "name": "(Linux) unit_testing",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/linux_x86-64/ut",
+            "args": [],
+            "cwd": "${workspaceFolder}/bin/linux_x86-64/",
+            "terminal": "integrated",
+            "env": {
+                "LD_LIBRARY_PATH": "${workspaceFolder}/bin/linux_x86-64"
+            }
+        },
     ]
 }

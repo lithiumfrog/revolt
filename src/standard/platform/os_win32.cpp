@@ -109,6 +109,14 @@ void os_memory_free(void* block, u64 length)
     }
 }
 
+u64 os_page_size_get(void)
+{
+    // retrieve system page size
+    SYSTEM_INFO sys_info;
+    GetSystemInfo(&sys_info);
+    return sys_info.dwPageSize;
+}
+
 
 // os windowing
 struct os_thread_st {

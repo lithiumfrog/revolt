@@ -14,6 +14,7 @@ u64 os_rdtsc(void);
 
 STANDARD_RESULT os_memory_allocate(u64 size, u64 debug_base_address_in_TiB, void** out_allocation, u64* out_aligned_size);
 void os_memory_free(void* block, u64 length);
+u64 os_page_size_get(void);
 
 STANDARD_RESULT os_windowing_init(void);
 STANDARD_RESULT os_window_create(struct platform_window_st* platform_window);
