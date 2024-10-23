@@ -16,7 +16,7 @@ COMPILER_FLAGS="\
                 -Wextra \
                 -Werror \
                 -g \
-                -fexceptions \
+                -fno-exceptions \
                 -DSTANDARD_PLATFORM_LINUX=1 \
                 -DSTANDARD_DEBUG_ASSERTS=1 \
                 -DSTANDARD_DEBUG_BASE_ADDRESS_FOR_ALLOCATIONS=1 \

@@ -29,6 +29,7 @@ set COMPILER_FLAGS=-std:c++latest ^
 set LINKER_FLAGS=-subsystem:console ^
                  -incremental:no ^
                  -opt:ref ^
+                 -DEBUG ^
                  user32.lib ^
                  gdi32.lib ^
                  OpenGL32.lib ^

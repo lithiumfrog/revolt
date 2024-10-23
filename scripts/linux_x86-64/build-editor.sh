@@ -16,7 +16,7 @@ COMPILER_FLAGS="\
                 -Wextra \
                 -Werror \
                 -g \
-                -fexceptions \
+                -fno-exceptions \
                 -DSTANDARD_PLATFORM_LINUX=1 \
                 -Isrc/standard \
                 -Isrc/editor \

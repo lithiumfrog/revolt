@@ -20,4 +20,4 @@
 
 
 ## TODO/NOTES
-* check compiler flags for both platforms, all errors etc
+* unit testing both platforms

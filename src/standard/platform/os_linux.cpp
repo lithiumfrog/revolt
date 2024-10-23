@@ -11,4 +11,4 @@ void os_console_write(const char* message, u8 level) {
     printf("\033[%sm%s\033[0m", level_strings[level], message);
 }
 
-#endif
+#endif // STANDARD_PLATFORM_LINUX == 1
