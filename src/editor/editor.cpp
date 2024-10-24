@@ -26,15 +26,15 @@ int main(void)
     os_gl_init();
 
     res = platform_window_create(800, 600, &win1);
-    if (res) { return STANDARD_RESULT_OS_WINDOWING_FAILURE; }
+    if (res) { return -1; }
     os_gl_window_setup(win1);
 
     res = platform_window_create(800, 600, &win2);
-    if (res) { return STANDARD_RESULT_OS_WINDOWING_FAILURE; }
+    if (res) { return -1; }
     os_gl_window_setup(win2);
 
     res = platform_window_create(800, 600, &win3);
-    if (res) { return STANDARD_RESULT_OS_WINDOWING_FAILURE; }
+    if (res) { return -1; }
     os_gl_window_setup(win3);
 
     platform_state->is_running = true;
