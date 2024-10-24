@@ -3,7 +3,6 @@
 #include "platform/log.h"
 
 
-STANDARD_RESULT editor_init(void);
 void editor_run(void);
 
 platform_state_st* platform_state;
@@ -13,21 +12,20 @@ platform_window_st* win3;
 
 int main(void)
 {
-    LOG_INFO("TEST\n");
-
     STANDARD_RESULT res;
+
     res = platform_init(&platform_state);
     if (res) { return -1; }
 
-    editor_init();
-    editor_run();
+    os_init(platform_state);
+    if (res) { return -1; }
 
-    return 0;
-}
+    res = platform_windowing_init();
+    if (res) { return -1; }
 
-STANDARD_RESULT editor_init(void)
-{
-    STANDARD_RESULT res = platform_window_create(800, 600, &win1);
+    os_gl_init();
+
+    res = platform_window_create(800, 600, &win1);
     if (res) { return STANDARD_RESULT_OS_WINDOWING_FAILURE; }
     os_gl_window_setup(win1);
 
@@ -39,7 +37,10 @@ STANDARD_RESULT editor_init(void)
     if (res) { return STANDARD_RESULT_OS_WINDOWING_FAILURE; }
     os_gl_window_setup(win3);
 
-    return STANDARD_RESULT_SUCCESS;
+    platform_state->is_running = true;
+    editor_run();
+
+    return 0;
 }
 
 void editor_run(void)

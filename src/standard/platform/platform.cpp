@@ -18,15 +18,8 @@ platform_state_st g_platform_state;
 STANDARD_RESULT platform_init(platform_state_st** out_platform_state)
 {
     STANDARD_RESULT res;
-
     res = memory_pool_create("platform pool", MiB(10), &g_platform_state.platform_pool);
-    os_init(&g_platform_state);
     if (res) { return res; }
-    res = platform_windowing_init();
-    if (res) { return res; }
-    os_gl_init();
-
-    g_platform_state.is_running = true;
     *out_platform_state = &g_platform_state;
     return STANDARD_RESULT_SUCCESS;
 }
