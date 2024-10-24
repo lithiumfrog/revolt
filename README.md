@@ -20,4 +20,5 @@
 
 
 ## TODO/NOTES
-* unit testing both platforms
+* dictionary unit testing
+* dictionary that sucks less, using two arrays or a darrayx<(row count) 2, (key) u64, (value) struct>

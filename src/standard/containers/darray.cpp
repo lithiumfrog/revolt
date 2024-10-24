@@ -2,16 +2,8 @@
 
 #include <string.h>
 
-typedef struct darray_header_st {
-    u64 length;
-    u64 capacity;
-    u64 stride;
-    memory_pool_st* pool;
-    memory_tag_e tag;
-} darray_header_st;
 
 #define DARRAY_RESIZE_FACTOR 2
-#define darray_header_size_bytes ((sizeof(darray_header_st) + MIN_ALIGNMENT - 1) & ~(MIN_ALIGNMENT - 1))
 
 
 void* _darray_create(u64 capacity, u64 stride, memory_pool_st* pool, memory_tag_e tag, const char* file, int line)
@@ -143,7 +135,7 @@ void _darray_erase_any_matching(void* array, const void* value)
 }
 
 
-void _darray_find_and_move_to_end(void* array, const void* value)
+void _darray_find_one_and_move_to_end(void* array, const void* value)
 {
     darray_header_st* header = (darray_header_st*)((u8*)array - darray_header_size_bytes);
     u64 stride = header->stride;

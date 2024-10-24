@@ -61,6 +61,32 @@ struct memory_pool_st {
     memory_pool_allocation_header_st* free_not_zero_list;
 };
 
+// ui
+struct ui_window_st {
+    struct ui_context_st* context;
+    const char* name;
+    b32 visible;
+    u64 pos_x;
+    u64 pos_y;
+    u64 size_x;
+    u64 size_y;
+};
+
+struct ui_context_st {
+    struct platform_window_st* platform_window;
+    struct dictionary_linear_st* ui_windows_dictionary;
+    u64 window_initial_width_x;
+    u64 window_initial_height_y;
+    u64 next_window_width_x;
+    u64 next_window_height_y;
+    ui_window_st* current_window_in_progress;
+
+    u64 hot_id;
+    u64 active_id;
+    u64 last_active_id;
+
+};
+
 // windowing
 struct platform_window_st {
     const char* title;
@@ -72,7 +98,7 @@ struct platform_window_st {
 
     struct os_window_st* os_window;
 
-    // ui_context_st ui_context;
+    ui_context_st ui_context;
 };
 
 // state
@@ -104,3 +130,14 @@ STANDARD_RESULT platform_windowing_init();
 STANDARD_RESULT platform_window_create(u64 width, u64 height, platform_window_st** out_window);
 void platform_window_destroy(platform_window_st* window);
 void platform_windowing_pre_render();
+
+// ui
+void platform_ui_next_window_initial_size(ui_context_st* context, u64 width, u64 height);
+void platform_ui_next_window_size(ui_context_st* context, u64 width, u64 height);
+
+void platform_ui_new_frame(ui_context_st* context);
+void platform_ui_window_begin(ui_context_st* context, const char* name);
+void platform_ui_window_end(ui_context_st* context);
+void platform_ui_render_frame(ui_context_st* context);
+
+b32 platform_ui_widget_button(ui_context_st* context);

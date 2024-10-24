@@ -5,6 +5,8 @@
 #include "os.h"
 #include "log.h"
 #include "containers/darray.h"
+#include "containers/dictionary_linear.h"
+#include "hash/fnv1a.h"
 
 #if STANDARD_DEBUG_BASE_ADDRESS_FOR_ALLOCATIONS == 1
     static u64 memory_debug_address_current = 3u; // starting debug address in TiB
@@ -437,7 +439,6 @@ void pool_free_not_zero_list_print(memory_pool_st* memory_pool)
 }
 
 
-
 // windowing
 STANDARD_RESULT platform_windowing_init()
 {
@@ -463,9 +464,8 @@ STANDARD_RESULT platform_window_create(u64 width, u64 height, platform_window_st
     STANDARD_RESULT res = os_window_create(window);
     if (res) { pool_free(window); return STANDARD_RESULT_OS_WINDOWING_FAILURE; }
 
-    // window->ui_context.platform_window = window;
-    // window->ui_context.ui_windows_darray = darray_create<ui_window_st*>(1, platform_state.platform_pool, MEMORY_TAG_WINDOWING);
-    // window->ui_context.ui_windows_dictionary = dictionary_linear_create(platform_state.platform_pool, MEMORY_TAG_WINDOWING);
+    window->ui_context.platform_window = window;
+    window->ui_context.ui_windows_dictionary = dictionary_linear_create(g_platform_state.platform_pool, MEMORY_TAG_WINDOWING);
 
     darray_push(g_platform_state.windows_darray, window);
 
@@ -507,4 +507,86 @@ void platform_windowing_pre_render(void)
         }
     }
 }
+
+
+// ui
+void platform_ui_next_window_size(ui_context_st* context, u64 width, u64 height)
+{
+    context->next_window_width_x = width;
+    context->next_window_height_y = height;
+}
+
+void platform_ui_next_window_initial_size(ui_context_st* context, u64 width, u64 height)
+{
+    context->window_initial_width_x = width;
+    context->window_initial_height_y = height;
+}
+
+void platform_ui_new_frame(ui_context_st* context)
+{
+    // clear state for the frame
+    // context->current_window = 0;
+
+
+    // memset(context, 0, sizeof(ui_context_st)); // dont want to zero window state.. zero more selectively
+    // set time?
+    // frame_count++?
+    // calc framerate for display?
+
+    // check input to see if is_active
+        // is active - has input, update hovered widget etc
+        // is not active - no input
+    // closing focused window must name new focused window as successor under it
+    // zero current windows
+
+}
+
+void platform_ui_window_begin(ui_context_st* context, const char* name)
+{
+    u64 window_id = fnv1a_hash_64(name);
+    void* value = dictionary_linear_find_from_beginning(context->ui_windows_dictionary, window_id);
+    ui_window_st* ui_window;
+    if (value)
+    {
+        ui_window = (ui_window_st*)value;
+    }
+    else
+    {
+        ui_window = (ui_window_st*)pool_allocate(sizeof(ui_window_st), g_platform_state.platform_pool, MEMORY_TAG_UI, true);
+        ui_window->context = context;
+        ui_window->name = name;
+        dictionary_linear_push(context->ui_windows_dictionary, window_id, ui_window);
+    }
+
+    // TODO: set window initial width and height from
+    // context->window_initial_width_x AND context->window_initial_height_y
+    // clear them both from the context for next use
+
+    context->current_window_in_progress = ui_window;
+    // if (ui_window->visible == false) { return };
+    // check flags for moving/resizing enabled/disabled
+    // update size/pos
+    // border hovered/held drag window size
+}
+
+void platform_ui_window_end(ui_context_st* context)
+{
+
+}
+
+void platform_ui_render_frame(ui_context_st* context)
+{
+
+}
+
+
+// ui widgets
+b32 platform_ui_widget_button(ui_context_st* context)
+{
+
+
+    return false;
+}
+
+
 

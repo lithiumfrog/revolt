@@ -7,10 +7,13 @@ echo.
 echo --------------------------- STARTING BUILD ---------------------------
 echo.
 call build-standard.bat
+if ERRORLEVEL 1 ( goto :build_failed )
 echo.
 call build-editor.bat
+if ERRORLEVEL 1 ( goto :build_failed )
 echo.
 call build-ut.bat
+if ERRORLEVEL 1 ( goto :build_failed)
 echo.
 echo --------------------------- BUILD COMPLETE ---------------------------
 echo.

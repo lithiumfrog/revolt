@@ -226,8 +226,6 @@ STANDARD_RESULT os_window_create(platform_window_st* platform_window)
     WaitForSingleObject(platform_window->os_window->initialized_event, INFINITE);
     CloseHandle(platform_window->os_window->initialized_event);
 
-    os_gl_window_setup(platform_window);
-
     return STANDARD_RESULT_SUCCESS;
 }
 

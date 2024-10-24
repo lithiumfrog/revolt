@@ -29,12 +29,15 @@ STANDARD_RESULT editor_init(void)
 {
     STANDARD_RESULT res = platform_window_create(800, 600, &win1);
     if (res) { return STANDARD_RESULT_OS_WINDOWING_FAILURE; }
+    os_gl_window_setup(win1);
 
     res = platform_window_create(800, 600, &win2);
     if (res) { return STANDARD_RESULT_OS_WINDOWING_FAILURE; }
+    os_gl_window_setup(win2);
 
     res = platform_window_create(800, 600, &win3);
     if (res) { return STANDARD_RESULT_OS_WINDOWING_FAILURE; }
+    os_gl_window_setup(win3);
 
     return STANDARD_RESULT_SUCCESS;
 }
@@ -116,10 +119,11 @@ static s32 test = 0;
         // platform_ui_window_end(&win1->ui_context);
         // platform_ui_render_frame(&win1->ui_context);
 
-
-        // platform_ui_window_begin(&win2->ui_context, "window2");
-        // platform_ui_window_begin(&win3->ui_context, "window3");
-        // platform_ui_window_begin(&win1->ui_context, "window1");
+        platform_ui_next_window_initial_size(&win1->ui_context, 540, 320);
+        platform_ui_window_begin(&win1->ui_context, "window1");
+        platform_ui_window_begin(&win2->ui_context, "window2");
+        platform_ui_window_begin(&win3->ui_context, "window3");
+        platform_ui_window_begin(&win1->ui_context, "window1");
 
         // LOG_DEBUG("WINDOW COUNT: %llu\n", darray_length_get(platform->windows_darray));
         FRAME_CYCLES_EndCycleCount = os_rdtsc();
