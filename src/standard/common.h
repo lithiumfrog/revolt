@@ -57,6 +57,7 @@ static_assert(sizeof(f64) == 8, "Expected f64 to be 8 bytes.");
 #define MB(amount) ((amount) * 1000ULL * 1000ULL)
 #define KB(amount) ((amount) * 1000ULL)
 
+#define BIT(x) (1 << x)
 
 /*
  * PLATFORM PAIN

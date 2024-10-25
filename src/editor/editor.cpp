@@ -120,11 +120,10 @@ static s32 test = 0;
         // platform_ui_window_end(&win1->ui_context);
         // platform_ui_render_frame(&win1->ui_context);
 
-        platform_ui_next_window_initial_size(&win1->ui_context, 540, 320);
-        platform_ui_window_begin(&win1->ui_context, "window1");
-        platform_ui_window_begin(&win2->ui_context, "window2");
-        platform_ui_window_begin(&win3->ui_context, "window3");
-        platform_ui_window_begin(&win1->ui_context, "window1");
+        platform_ui_begin(&win1->ui_context, "window1", 50, 50, 320, 540, UI_FLAG_WINDOW_MOVABLE|UI_FLAG_WINDOW_SCALABLE);
+        platform_ui_begin(&win2->ui_context, "window2", 50, 50, 320, 540, UI_FLAG_WINDOW_MOVABLE|UI_FLAG_WINDOW_SCALABLE);
+        platform_ui_begin(&win3->ui_context, "window3", 50, 50, 320, 540, UI_FLAG_WINDOW_MOVABLE|UI_FLAG_WINDOW_SCALABLE);
+        platform_ui_begin(&win1->ui_context, "window1", 50, 50, 320, 540, UI_FLAG_WINDOW_MOVABLE|UI_FLAG_WINDOW_SCALABLE);
 
         // LOG_DEBUG("WINDOW COUNT: %llu\n", darray_length_get(platform->windows_darray));
         FRAME_CYCLES_EndCycleCount = os_rdtsc();
